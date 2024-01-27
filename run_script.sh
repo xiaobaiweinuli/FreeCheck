@@ -11,6 +11,10 @@ NOTIFICATIONS=()
 USER_COUNT=0  # Counter to keep track of the number of users processed
 TOTAL_USERS=2  # Set the total number of users
 
+# Decode Unicode escapes
+function decode_unicode() {
+    echo -e "$1"
+
 # 推送通知函数
 function pushplus_notification() {
     local title="$1"
