@@ -1,0 +1,28 @@
+name: Run Script
+
+on:
+  push:
+    branches:
+      - main  # Adjust this branch if needed
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Bash
+      uses: actions/setup-node@v4
+      with:
+        node-version: '14'
+
+    - name: Run script
+      run: bash run_script.sh
+      env:
+        USERID_1: ${{ secrets.USERID_1 }}
+        TOKEN_1: ${{ secrets.TOKEN_1 }}
+        USERID_2: ${{ secrets.USERID_2 }}
+        TOKEN_2: ${{ secrets.TOKEN_2 }}
+        PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
