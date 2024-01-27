@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # 设置变量，您可以根据需要更改这些值
+export LC_ALL=C.UTF-8
 USERID_1="$USERID_1"
 TOKEN_1="$TOKEN_1"
 USERID_2="$USERID_2"
@@ -62,7 +63,8 @@ function execute_user_operations() {
         -s) 
     
     # 将通知添加到数组
-    NOTIFICATIONS+=("$user_note ($userid)，$api_response")
+    NOTIFICATIONS+=("$user_note ($userid)，$api_response
+")
     
     # Increment the user counter
     ((USER_COUNT++))
