@@ -20,7 +20,7 @@ function pushplus_notification() {
     local title="$1"
     local content="$2"
     local decoded_content
-    decoded_content=$(decode_unicode "$content")  # Corrected line
+    decoded_content=$(echo -n "$content" | jq -r 'fromjson?' 2>/dev/null || echo "$content")
     curl -s -X POST "http://www.pushplus.plus/send" -d "token=$PUSHPLUS_TOKEN&title=$title&content=$decoded_content&template=markdown"
 }
 
