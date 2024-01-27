@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main  # Adjust this branch if needed
+  schedule:
+    - cron: '15,46 3,4,5 * * *'   # UTC时间执行，定时时间加8为运行时间
+  workflow_dispatch:  # 允许手动触发
 
 jobs:
   run-script:
