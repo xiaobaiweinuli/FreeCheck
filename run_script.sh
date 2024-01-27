@@ -1,19 +1,31 @@
 #!/bin/bash
 
 # 设置变量，您可以根据需要更改这些值
-USERID_1=""
-TOKEN_1=""
-USERID_2=""
-TOKEN_2=""
-PUSHPLUS_TOKEN=""
+USERID_1="$1"
+TOKEN_1="$2"
+USERID_2="$3"
+TOKEN_2="$4"
+PUSHPLUS_TOKEN="$5"
 NOTIFICATIONS=()
+USER_COUNT=0  # Counter to keep track of the number of users processed
+TOTAL_USERS=2  # Set the total number of users
 
 # 推送通知函数
 function pushplus_notification() {
     local title="$1"
     local content="$2"
-    curl -s -X POST "http://www.pushplus.plus/send" -d "token=$PUSHPLUS_TOKEN&title=$title&content=$content&template=markdown"
-    
+    curl -X POST "http://www.pushplus.plus/send" \
+        -H "Content-Type: application/json" \
+        -d "{\"token\":\"$PUSHPLUS_TOKEN\",\"title\":\"$title\",\"content\":\"$content\"}" \
+        -s
+}
+
+# 随机等待函数
+function random_wait() {
+    local min_seconds=$1
+    local max_seconds=$2
+    local seconds_to_wait=$((RANDOM % (max_seconds - min_seconds + 1) + min_seconds))
+    sleep $seconds_to_wait
 }
 
 # 定义函数执行用户操作
@@ -36,12 +48,12 @@ function execute_user_operations() {
         -d "$timestamp" \
         -s) 
     
-    #echo "qd_info的JSON 响应内容：$response"
+    echo "qd_info的JSON 响应内容：$response"
     
-    local record_id=$(echo "$response" |/data/user/0/com.termux/files/usr/bin/jq -r '.data.record_id')
+    local record_id=$(echo "$response" | jq -r '.data.record_id')
     echo "提取 record_id 的值：$record_id"
     
-    local sortIndex=$(echo "$response" |/data/user/0/com.termux/files/usr/bin/jq -r '.data.list[] | select(.state == 0) | .sortIndex')
+    local sortIndex=$(echo "$response" | jq -r '.data.list[] | select(.state == 0) | .sortIndex')
     
     echo "提取 sortIndex 的值：$sortIndex"
     
@@ -65,25 +77,33 @@ function execute_user_operations() {
         -s) # 使用 -s 参数静默模式输出
 
     # 打印当前账号的 API 响应
-    #echo "账号$userid 的 API 响应：$api_response"
+    echo "账号$user_note ($userid) 的 API 响应：$api_response"
     
     # 将通知添加到数组
-    NOTIFICATIONS+=("$user_note ($userid)，$api_response
-    ")
+    NOTIFICATIONS+=("$user_note ($userid)，$api_response")
     
-    echo "********结束账号$user_note ($userid)操作********"
+    echo "********结束账号$user_note ($userid) 操作********"
+    
+    # Increment the user counter
+    ((USER_COUNT++))
 
-    # 随机等待5到6秒
-    SECONDS_TO_WAIT=$((RANDOM % 30 + 10))
-    sleep $SECONDS_TO_WAIT
+    # 如果是最后一个用户，等待2到3秒后发送通知
+    if [ "$USER_COUNT" -eq "$TOTAL_USERS" ]; then
+        echo "所有用户操作已完成，等待2到3秒后发送通知..."
+        random_wait 2 3
+        
+        # 构造通知内容
+        NOTIFICATION_CONTENT=$(IFS=$'\n'; echo "${NOTIFICATIONS[*]}")
+
+        # 推送通知
+        pushplus_notification "签到通知" "$NOTIFICATION_CONTENT"
+    else
+        # 如果不是最后一个用户，随机等待10到20秒
+        echo "等待10到20秒后继续下一个用户操作..."
+        random_wait 10 20
+    fi
 }
 
 # 执行所有用户操作
-execute_user_operations "$USERID_1" "$TOKEN_1" "些许期待"
-execute_user_operations "$USERID_2" "$TOKEN_2" "小号175"
-
-# 构造通知内容
-NOTIFICATION_CONTENT=$(IFS=$'\n'; echo "${NOTIFICATIONS[*]}")
-
-# 推送通知
-pushplus_notification "签到通知" "$NOTIFICATION_CONTENT"
+execute_user_operations "$USERID_1" "$TOKEN_1" "星霜"
+execute_user_operations "$USERID_2" "$TOKEN_2" "其他备注"
