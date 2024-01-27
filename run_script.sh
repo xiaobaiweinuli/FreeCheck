@@ -11,17 +11,11 @@ NOTIFICATIONS=()
 USER_COUNT=0  # Counter to keep track of the number of users processed
 TOTAL_USERS=2  # Set the total number of users
 
-# Decode Unicode escapes
-function decode_unicode() {
-    echo -e "$1"
-
 # 推送通知函数
 function pushplus_notification() {
     local title="$1"
     local content="$2"
-    local decoded_content
-    decoded_content=$(echo -n "$content" | jq -r 'fromjson?' 2>/dev/null || echo "$content")
-    curl -s -X POST "http://www.pushplus.plus/send" -d "token=$PUSHPLUS_TOKEN&title=$title&content=$decoded_content&template=markdown"
+    curl -s -X POST "http://www.pushplus.plus/send" -d "token=$PUSHPLUS_TOKEN&title=$title&content=$content&template=markdown"
 }
 
 # 随机等待函数
