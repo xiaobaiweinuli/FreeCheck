@@ -19,7 +19,9 @@ function decode_unicode() {
 function pushplus_notification() {
     local title="$1"
     local content="$2"
-    curl -s -X POST "http://www.pushplus.plus/send" -d "token=$PUSHPLUS_TOKEN&title=$title&content=$content&template=markdown"
+    local decoded_content
+    decoded_content=$(decode_unicode "$content")  # Corrected line
+    curl -s -X POST "http://www.pushplus.plus/send" -d "token=$PUSHPLUS_TOKEN&title=$title&content=$decoded_content&template=markdown"
 }
 
 # 随机等待函数
