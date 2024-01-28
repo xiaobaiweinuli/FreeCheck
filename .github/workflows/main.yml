@@ -1,11 +1,11 @@
 name: Run Script
 
 on:
-  push:
-    branches:
-      - main  # Adjust this branch if needed
-  schedule:
-    - cron: '46 2 * * *'   # UTC时间执行，定时时间加8为运行时间
+  #push:
+   # branches:
+     # - main  # Adjust this branch if needed
+  #schedule:
+   # - cron: '46 2 * * *'   # UTC时间执行，定时时间加8为运行时间
   workflow_dispatch:  # 允许手动触发
 
 jobs:
