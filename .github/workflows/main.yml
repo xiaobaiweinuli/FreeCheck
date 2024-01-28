@@ -16,12 +16,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    # 设置UTF-8 locale
-    - name: Set UTF-8 locale
-      run: |
-        sudo locale-gen en_US.UTF-8
-        sudo update-locale LANG=en_US.UTF-8
-
     # 运行脚本
     - name: Run script
       run: bash run_script.sh
