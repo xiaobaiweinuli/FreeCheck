@@ -1,5 +1,6 @@
 #!/bin/bash
-
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
 NOTIFICATIONS=()
 USER_COUNT=0  # Counter to keep track of the number of users processed
 TOTAL_USERS=2  # Set the total number of users
@@ -41,10 +42,10 @@ function execute_user_operations() {
     
     echo "qd_info的JSON 响应内容：$response"
     
-    local record_id=$(echo "$response" |/data/user/0/com.termux/files/usr/bin/jq -r '.data.record_id')
+    local record_id=$(echo "$response" |jq -r '.data.record_id')
     echo "提取 record_id 的值：$record_id"
     
-    local sortIndex=$(echo "$response" |/data/user/0/com.termux/files/usr/bin/jq -r '.data.list[] | select(.state == 0) | .sortIndex')
+    local sortIndex=$(echo "$response" |jq -r '.data.list[] | select(.state == 0) | .sortIndex')
     
     echo "提取 sortIndex 的值：$sortIndex"
     
