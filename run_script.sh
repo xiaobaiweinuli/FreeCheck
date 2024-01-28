@@ -1,7 +1,7 @@
 #!/bin/bash
-
-# 设置变量，您可以根据需要更改这些值
+export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
+# 设置变量，您可以根据需要更改这些值
 USERID_1="$USERID_1"
 TOKEN_1="$TOKEN_1"
 USERID_2="$USERID_2"
