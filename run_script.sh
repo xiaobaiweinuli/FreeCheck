@@ -33,8 +33,11 @@ function execute_user_operations() {
     
     local response=$(curl -s -X POST 'https://m.freecheck.cn/api/user/qd_info' -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/38 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' -H 'content-type:application/json' -H 'accept: */*' -H "userid: $userid" -H "token: $token" -d "$timestamp") 
 
-    echo "qd_info的JSON 响应内容：$response"
-    echo "响应1：$response" | sed 's/\\u\([0-9a-fA-F]\{4\}\)/\&#x\1;/g' | xargs -0 printf "%b"
+  # 使用jq解析JSON响应并存储在新的变量中
+parsed_response=$(echo "$response" | jq -r .)
+# 现在，你可以将parsed_response变量用于其他操作
+# 例如，打印出来
+echo "$parsed_response"
 
     local record_id=$(echo "$response" |jq -r '.data.record_id')
     
