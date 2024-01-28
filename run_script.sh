@@ -33,12 +33,6 @@ function execute_user_operations() {
     
     local response=$(curl -s -X POST 'https://m.freecheck.cn/api/user/qd_info' -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/38 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' -H 'content-type:application/json' -H 'accept: */*' -H "userid: $userid" -H "token: $token" -d "$timestamp") 
 
-  # 使用jq解析JSON响应并存储在新的变量中
-parsed_response=$(echo "$response" | jq -r .)
-# 现在，你可以将parsed_response变量用于其他操作
-# 例如，打印出来
-echo "$parsed_response"
-
     local record_id=$(echo "$response" |jq -r '.data.record_id')
     
     local sortIndex=$(echo "$response" |jq -r '.data.list[] | select(.state == 0) | .sortIndex')
@@ -52,9 +46,10 @@ echo "$parsed_response"
     
     # 发送 POST 请求
     local api_response=$(curl -s -X POST 'https://m.freecheck.cn/api/user/set_qd' -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/2038 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' -H "Content-Type: application/json; charset=UTF-8" -H "userid: $userid" -H "token: $token" -d "$json_payload")
-    
+    # 使用jq解析JSON响应并存储在新的变量中
+    parsed_response=$(echo "$api_response" | jq -r .)
     # 将通知添加到数组
-    NOTIFICATIONS+=("$user_note ($userid)：$api_response
+    NOTIFICATIONS+=("$user_note ($userid)：$parsed_response
     ")
     
     echo "********结束账号$user_note ($userid) 操作********"
