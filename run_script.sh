@@ -33,13 +33,7 @@ function execute_user_operations() {
     local timestamp=$(date +%s)
     echo "选择qd_info的时间戳：$timestamp"
     
-    local response=$(curl -X POST 'https://m.freecheck.cn/api/user/qd_info'
-        -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/38 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' 
-        -H 'Content-Type: application/json'
-        -H "userid: $userid"
-        -H "token: $token"
-        -d "$timestamp"
-        -s) 
+    local response=$(curl -s -X POST 'https://m.freecheck.cn/api/user/qd_info' -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/38 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' -H 'Content-Type: application/json; charset=UTF-8' -H "userid: $userid" -H "token: $token" -d "$timestamp") 
     
     local record_id=$(echo "$response" |jq -r '.data.record_id')
     
@@ -53,13 +47,7 @@ function execute_user_operations() {
     local json_payload="{\"qd_id\":$record_id,\"sort_index\":$first_sortIndex,\"Timestamp\":$updated_timestamp}"
     
     # 发送 POST 请求
-    local api_response=$(curl -X POST 'https://m.freecheck.cn/api/user/set_qd'
-        -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/2038 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' \
-        -H "Content-Type: application/json; charset=UTF-8"
-        -H "userid: $userid"
-        -H "token: $token"
-        -d "$json_payload"
-        -s) # 使用 -s 参数静默模式输出
+    local api_response=$(curl -s -X POST 'https://m.freecheck.cn/api/user/set_qd' -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/2038 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' -H "Content-Type: application/json; charset=UTF-8" -H "userid: $userid" -H "token: $token" -d "$json_payload")
     
     # 将通知添加到数组
     NOTIFICATIONS+=("$user_note ($userid)：$api_response
