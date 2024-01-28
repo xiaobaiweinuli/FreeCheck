@@ -3,9 +3,9 @@ name: Run Script
 on:
   push:
     branches:
-      - main  # Adjust this branch if needed
+      - main  # 根据需要调整此分支
   schedule:
-    - cron: '46 2 * * *'   # UTC时间执行，定时时间加8为运行时间
+    - cron: '46 2 * * *'  # UTC时间执行，定时时间加8为运行时间
   workflow_dispatch:  # 允许手动触发
 
 jobs:
@@ -16,14 +16,13 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Bash
-      uses: actions/setup-node@v4
-      with:
-        node-version: '14'
-    steps:
-    - name: Test Chinese Output
-      run: echo '你好，世界！'
+    # 设置UTF-8 locale
+    - name: Set UTF-8 locale
+      run: |
+        sudo locale-gen en_US.UTF-8
+        sudo update-locale LANG=en_US.UTF-8
 
+    # 运行脚本
     - name: Run script
       run: bash run_script.sh
       env:
