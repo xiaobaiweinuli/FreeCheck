@@ -1,6 +1,5 @@
 #!/bin/bash
-export LANG=C.UTF-8
-export LC_ALL=C.UTF-8
+
 NOTIFICATIONS=()
 USER_COUNT=0  # Counter to keep track of the number of users processed
 TOTAL_USERS=2  # Set the total number of users
