@@ -56,7 +56,7 @@ function execute_user_operations() {
     
     local api_response=$(curl -X POST 'https://m.freecheck.cn/api/user/set_qd' \
         -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/2038 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' \
-        -H 'Content-Type: application/json' \
+        -H "Content-Type: application/json; charset=UTF-8" \
         -H "userid: $USERID_1" \
         -H "token: $TOKEN_1" \
         -d "$json_payload" \
