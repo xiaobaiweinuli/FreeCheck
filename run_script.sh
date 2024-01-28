@@ -32,7 +32,7 @@ function execute_user_operations() {
     echo "选择qd_info的时间戳：$timestamp"
     
     local response=$(curl -s -X POST 'https://m.freecheck.cn/api/user/qd_info' -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/38 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' -H 'content-type:application/json' -H 'accept: */*' -H "userid: $userid" -H "token: $token" -d "$timestamp") 
-    echo "qd_info的JSON 响应内容：$response"
+
     local record_id=$(echo "$response" |jq -r '.data.record_id')
     
     local sortIndex=$(echo "$response" |jq -r '.data.list[] | select(.state == 0) | .sortIndex')
