@@ -33,47 +33,37 @@ function execute_user_operations() {
     local timestamp=$(date +%s)
     echo "选择qd_info的时间戳：$timestamp"
     
-    local response=$(curl -X POST 'https://m.freecheck.cn/api/user/qd_info' \
-        -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/38 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' \
-        -H 'Content-Type: application/json' \
-        -H "userid: $userid" \
-        -H "token: $token" \
-        -d "$timestamp" \
+    local response=$(curl -X POST 'https://m.freecheck.cn/api/user/qd_info'
+        -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/38 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' 
+        -H 'Content-Type: application/json'
+        -H "userid: $userid"
+        -H "token: $token"
+        -d "$timestamp"
         -s) 
     
-    echo "qd_info的JSON 响应内容：$response"
-    
     local record_id=$(echo "$response" |jq -r '.data.record_id')
-    echo "提取 record_id 的值：$record_id"
     
     local sortIndex=$(echo "$response" |jq -r '.data.list[] | select(.state == 0) | .sortIndex')
     
-    echo "提取 sortIndex 的值：$sortIndex"
-    
     local first_sortIndex=$(echo "$sortIndex" | head -n 1)
-    
-    echo "选择第一个sortIndex：$first_sortIndex"
     
     local updated_timestamp=$(date +%s)
     echo "set_qd的时间戳：$updated_timestamp"
     
     local json_payload="{\"qd_id\":$record_id,\"sort_index\":$first_sortIndex,\"Timestamp\":$updated_timestamp}"
-    echo "组成JSON_PAYLOAD：$json_payload"
     
     # 发送 POST 请求
-    local api_response=$(curl -X POST 'https://m.freecheck.cn/api/user/set_qd' \
+    local api_response=$(curl -X POST 'https://m.freecheck.cn/api/user/set_qd'
         -H 'User-Agent: Mozilla/5.0 (Linux; Android 13; 23013RK75C Build/TKQ1.220905.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36 XWEB/1160043 MMWEBSDK/20230805 MMWEBID/2038 MicroMessenger/8.0.42.2424(0x28002A43) WeChat/arm64 Weixin GPVersion/1 NetType/WIFI Language/zh_CN ABI/arm64' \
-        -H "Content-Type: application/json; charset=UTF-8" \
-        -H "userid: $userid" \
-        -H "token: $token" \
-        -d "$json_payload" \
+        -H "Content-Type: application/json; charset=UTF-8"
+        -H "userid: $userid"
+        -H "token: $token"
+        -d "$json_payload"
         -s) # 使用 -s 参数静默模式输出
-
-    # 打印当前账号的 API 响应
-    echo "账号$user_note ($userid) 的 API 响应：$api_response"
     
     # 将通知添加到数组
-    NOTIFICATIONS+=("$user_note ($userid)，$api_response")
+    NOTIFICATIONS+=("$user_note ($userid)：$api_response
+    ")
     
     echo "********结束账号$user_note ($userid) 操作********"
     
@@ -97,5 +87,5 @@ function execute_user_operations() {
 }
 
 # 执行所有用户操作
-execute_user_operations "$USERID_1" "$TOKEN_1" "星霜"
-execute_user_operations "$USERID_2" "$TOKEN_2" "其他备注"
+execute_user_operations "$USERID_1" "$TOKEN_1" "小号"
+execute_user_operations "$USERID_2" "$TOKEN_2" "大号"
