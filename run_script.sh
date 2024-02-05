@@ -74,5 +74,5 @@ function execute_user_operations() {
 }
 
 # 执行所有用户操作
-execute_user_operations "$USERID_1" "$TOKEN_1" "小号"
-execute_user_operations "$USERID_2" "$TOKEN_2" "大号"
+execute_user_operations "$USERID_1" "$TOKEN_1" "大"
+execute_user_operations "$USERID_2" "$TOKEN_2" "星"
