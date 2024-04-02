@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main  # 根据需要调整此分支
-  schedule:
+  #schedule:
     - cron: '46 2 * * *'  # UTC时间执行，定时时间加8为运行时间
   workflow_dispatch:  # 允许手动触发
 
